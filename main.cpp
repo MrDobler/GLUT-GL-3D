@@ -4,6 +4,8 @@
 // Posição inicial da esfera (sx,sy) e posição atual (tx,ty)
 float sx=0.0,sy=-15;
 float tx=sx, ty=sy;
+float xCubo = 0.0;
+float yCubo = 0.0;
 
 // Velocidade de deslocamento no eixo x e no eixo y
 float dx = 0.2, dy = 0.05;
@@ -95,19 +97,24 @@ void DesenhaCena(void)
 		glutSolidSphere(5.0,20,20);
 	glPopMatrix();
 
+	glPushMatrix();
+		glTranslatef(xCubo, yCubo, 0);
+		glutSolidCube(5);
+	glPopMatrix();
 	// Atualiza posição atual
 	tx+=dx;
 	ty+=dy;
 
 	// Se "bater" nos lados, inverte o sentido do movimento
-	if(tx >= 25 || tx <= -25)
+	if ((tx >= 25) || (tx <= -25) || ( tx <= -5))
 		dx = -dx;
 
-	if(ty >= 25 || ty < -25)
+	if(ty >= 25 || ty < -25 || ty >= 5)
 		dy = -dy;
 
 	glFlush();
 }
+
 
 // Função callback de redesenho da janela de visualização
 #define	Q 0.9
@@ -119,7 +126,7 @@ void Desenha(void)
 		// Ajusta posição inicial da esfera
 		tx = sx;
 		ty = sy;
-		for(int i=0;i<quadros;++i)
+		for( int i=0; i < quadros; ++i)
 		{
 			// Limpa a janela
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -156,6 +163,7 @@ void Desenha(void)
 		sx = tx;
 		sy = ty;
 	}
+
 	glutSwapBuffers();
 }
 
@@ -199,25 +207,34 @@ void Teclado (unsigned char key, int x, int y)
 {
 	if (key == 27)
 		exit(0);
+
 	switch(key)
 	{
 		// Controla total de quadros gerados a cada redesenho
-		case '+': quadros--;
-				  break;
-		case '-': quadros++;
-				  break;
+		case '+':
+			quadros--;
+			break;
+		case '-':
+			quadros++;
+			break;
 		// Ativa/desativa motion blur
-		case 'b': blur=!blur;
-				  primeiro = true;
-				  break;
+		case 'b':
+			blur=!blur;
+			primeiro = true;
+			break;
 		// Ativa/desativa animação
-		case 'a': animado = !animado;
-				  if(animado)
-					glutIdleFunc(Anima);
-				  else
-					glutIdleFunc(NULL);
-				  break;
+		case 'a':
+			animado = !animado;
+			if(animado)
+				glutIdleFunc(Anima);
+			else
+				glutIdleFunc(NULL);
+			break;
+		case 'm':
+			tx++;
+			break;
 	}
+
 	glutPostRedisplay();
 }
 
@@ -226,17 +243,17 @@ void TeclasEspeciais (int tecla, int x, int y)
 {
 	switch (tecla)
 	{
-		case GLUT_KEY_UP:
+		case GLUT_KEY_HOME:
 			if(angle>=10)
 				angle -=5;
 
 			break;
-		case GLUT_KEY_DOWN:
+		case GLUT_KEY_END:
 			if(angle<=150)
 				angle +=5;
-
 			break;
 	}
+
 	EspecificaParametrosVisualizacao();
 	glutPostRedisplay();
 }
@@ -267,7 +284,7 @@ void GerenciaMouse(int button, int state, int x, int y)
 void GerenciaMovim(int x, int y)
 {
 	// Botão esquerdo ?
-	if(bot==GLUT_LEFT_BUTTON)
+	if(bot == GLUT_LEFT_BUTTON)
 	{
 		// Calcula diferenças
 		int deltax = x_ini - x;
@@ -277,7 +294,7 @@ void GerenciaMovim(int x, int y)
 		rotacaoX = rotX_ini - deltay/SENS_ROT;
 	}
 	// Botão direito ?
-	else if(bot==GLUT_RIGHT_BUTTON)
+	else if(bot == GLUT_RIGHT_BUTTON)
 	{
 		// Calcula diferença
 		int deltaz = y_ini - y;
@@ -285,7 +302,7 @@ void GerenciaMovim(int x, int y)
 		obsZ = obsZ_ini + deltaz/SENS_OBS;
 	}
 	// Botão do meio ?
-	else if(bot==GLUT_MIDDLE_BUTTON)
+	else if(bot == GLUT_MIDDLE_BUTTON)
 	{
 		// Calcula diferenças
 		int deltax = x_ini - x;
@@ -302,7 +319,8 @@ void GerenciaMovim(int x, int y)
 void AlteraTamanhoJanela(GLsizei w, GLsizei h)
 {
 	// Para previnir uma divisão por zero
-	if ( h == 0 ) h = 1;
+	if ( h == 0 )
+		h = 1;
 
 	// Especifica as dimensões da viewport
 	glViewport(0, 0, w, h);
@@ -372,7 +390,7 @@ int main(int argc, char** argv)
 	glutReshapeFunc(AlteraTamanhoJanela);
 
 	// Registra a função callback para tratamento das teclas normais
-	glutKeyboardFunc (Teclado);
+	glutKeyboardFunc(Teclado);
 
 	// Registra a função callback para tratamento das teclas especiais
 	glutSpecialFunc (TeclasEspeciais);
