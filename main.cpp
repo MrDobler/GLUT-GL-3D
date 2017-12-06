@@ -99,10 +99,10 @@ void DesenhaCena(void)
 		glutSolidSphere(5.0,20,20);
 	glPopMatrix();
 
-	glPushMatrix();
-		glTranslatef(xCubo, yCubo, 0);
-		glutSolidCube(5);
-	glPopMatrix();
+//	glPushMatrix();
+//		glTranslatef(xCubo, yCubo, 0);
+//		glutSolidCube(5);
+//	glPopMatrix();
 	// Atualiza posi��o atual
 	xAtualDaEsfera += velocidadeDeslocX;
 	yAtualDaEsfera += velocidadeDeslocY;
@@ -126,8 +126,8 @@ void Desenha(void)
 	if(blur)
 	{
 		// Ajusta posi��o inicial da esfera
-		tx = xInicioDaEsfera;
-		ty = yInicioDaEsfera;
+		xAtualDaEsfera = xInicioDaEsfera;
+		yAtualDaEsfera = yInicioDaEsfera;
 		for( int i=0; i < quadros; ++i)
 		{
 			// Limpa a janela
@@ -178,7 +178,7 @@ void PosicionaObservador(void)
 	glLoadIdentity();
 	DefineIluminacao();
 	// Posiciona e orienta o observador
-	glTranslatef(-obsX,-obsY,-obsZ);
+	glTranslatef(-posicaoObservadorX,-posicaoObservadorY,-posicaoObservadorZ);
 	glRotatef(rotacaoX,1,0,0);
 	glRotatef(rotacaoY,0,1,0);
 }
@@ -233,7 +233,7 @@ void Teclado (unsigned char key, int x, int y)
 				glutIdleFunc(NULL);
 			break;
 		case 'm':
-			tx++;
+			xAtualDaEsfera++;
 			break;
 	}
 
@@ -269,8 +269,8 @@ void GerenciaMouse(int button, int state, int x, int y)
 		posicaoMouseInicial_X  = x;
 		posicaoMouseInical_Y = y;
 		observadorXInicial = posicaoObservadorX;
-		observadorYInicial = posicaoObservadorYobsY;
-		observadorZInicial = posicaoObservadorZobsZ;
+		observadorYInicial = posicaoObservadorY;
+		observadorZInicial = posicaoObservadorZ;
 		rotacaoXInicial = rotacaoX;
 		rotacaoYInicial = rotacaoY;
 		botao = button;
@@ -365,8 +365,8 @@ void Inicializa (void)
 	// observador virtual
 	rotacaoX = 0;
 	rotacaoY = 0;
-	observadorXInicial = observadorYInicial = 0;
-	observadorZInicial = 55;
+	posicaoObservadorX = posicaoObservadorY = 0;
+	posicaoObservadorZ = 55;
 }
 
 // Programa Principal
