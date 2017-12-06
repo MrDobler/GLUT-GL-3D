@@ -1,15 +1,20 @@
 #include <stdlib.h>
 #include <GL/glut.h>
+#include <stdio.h>
 
 // Posi��o inicial da esfera (sx,sy) e posi��o atual (tx,ty)
 float xInicioDaEsfera = 0.0, yInicioDaEsfera = -15;
 float xAtualDaEsfera = xInicioDaEsfera;
 float yAtualDaEsfera = yInicioDaEsfera;
-float xCubo = 0.0;
-float yCubo = 0.0;
+float xInicioCubo = 20.0;
+float yInicioCubo = 20.0;
+float xAtualCubo = xInicioCubo;
+float yAtualCubo = yInicioCubo;
+
 
 // Velocidade de deslocamento no eixo x e no eixo y
-float velocidadeDeslocX = 0.2, velocidadeDeslocY = 0.05;
+float velocDeslocEsfera_X = 0.2, velocDeslocEsfera_Y = 0.05;
+float velocDeslocCubo_X = 0.2, velocDeslocCubo_Y = 0.05;
 
 // Quantidade de quadros a acumular por redesenho
 int quadros = 5;
@@ -99,25 +104,39 @@ void DesenhaCena(void)
 		glutSolidSphere(5.0,20,20);
 	glPopMatrix();
 
-//	glPushMatrix();
-//		glTranslatef(xCubo, yCubo, 0);
-//		glutSolidCube(5);
-//	glPopMatrix();
+	glPushMatrix();
+		glTranslatef(xInicioCubo, yInicioCubo, 0);
+		glutSolidCube(5);
+	glPopMatrix();
+
 	// Atualiza posi��o atual
-	xAtualDaEsfera += velocidadeDeslocX;
-	yAtualDaEsfera += velocidadeDeslocY;
+	xAtualDaEsfera += velocDeslocEsfera_X;
+	yAtualDaEsfera += velocDeslocEsfera_Y;
+	xAtualCubo += velocDeslocCubo_X;
+	yAtualCubo += velocDeslocCubo_Y;
 
 	// Se "bater" nos lados, inverte o sentido do movimento
-	if(xAtualDaEsfera >= 25 || xAtualDaEsfera <= -25 ||  xAtualDaEsfera <= -5)
-		velocidadeDeslocX = -velocidadeDeslocX;
+	if(xAtualDaEsfera >= 25 || xAtualDaEsfera <= -25)
+		velocDeslocEsfera_X = -velocDeslocEsfera_X;
 
-	if(yAtualDaEsfera >= 25 || yAtualDaEsfera < -25 || yAtualDaEsfera >= 5)
-		velocidadeDeslocY = -velocidadeDeslocY;
+	if(yAtualDaEsfera >= 25 || yAtualDaEsfera < -25)
+		velocDeslocEsfera_Y = -velocDeslocEsfera_Y;
+
+	if(xAtualCubo >= 25 || xAtualCubo <= -25)
+		velocDeslocCubo_X = -velocDeslocCubo_X;
+
+	if(yAtualCubo >= 25 || yAtualCubo < -25)
+		velocDeslocCubo_Y = -velocDeslocCubo_Y;
+
+
 
 	glFlush();
 }
 
+void colisaoEsfera()
+{
 
+}
 // Fun��o callback de redesenho da janela de visualiza��o
 #define	Q 0.9
 void Desenha(void)
@@ -164,6 +183,8 @@ void Desenha(void)
 		// Atualiza posi��o inicial como sendo a atual
 		xInicioDaEsfera = xAtualDaEsfera;
 		yInicioDaEsfera = yAtualDaEsfera;
+		xInicioCubo = xAtualCubo;
+		yInicioCubo = yAtualCubo;
 	}
 
 	glutSwapBuffers();
@@ -231,9 +252,6 @@ void Teclado (unsigned char key, int x, int y)
 				glutIdleFunc(Anima);
 			else
 				glutIdleFunc(NULL);
-			break;
-		case 'm':
-			xAtualDaEsfera++;
 			break;
 	}
 
@@ -359,7 +377,7 @@ void Inicializa (void)
 
 	// Inicializa a vari�vel que especifica o �ngulo da proje��o
 	// perspectiva
-	angle = 45;
+	angle = 80;
 
 	// Inicializa as vari�veis usadas para alterar a posi��o do
 	// observador virtual
