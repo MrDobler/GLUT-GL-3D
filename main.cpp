@@ -1,18 +1,31 @@
 #include <stdlib.h>
 #include <GL/glut.h>
+#include <math.h>
 
-// Posição inicial da esfera (sx,sy) e posição atual (tx,ty)
+// Posição inicial da esfera
 float xInicioDaEsfera = 0.0, yInicioDaEsfera = -15;
 float xAtualDaEsfera = xInicioDaEsfera;
 float yAtualDaEsfera = yInicioDaEsfera;
+
+float xInicioDaEsfera2 = 10, yInicioDaEsfera2 = 10;
+float xAtualDaEsfera2 = xInicioDaEsfera2;
+float yAtualDaEsfera2 = yInicioDaEsfera2;
+//Posição inicial do cubo1
 float xInicioCubo = 20.0;
 float yInicioCubo = 20.0;
+
 float xAtualCubo = xInicioCubo;
 float yAtualCubo = yInicioCubo;
 
+float dX = xAtualDaEsfera2 - xAtualDaEsfera;
+float dY = yAtualDaEsfera2 - yAtualDaEsfera;
+
+float distancia = sqrt(dX*dX + dY*dY);
 
 // Velocidade de deslocamento no eixo x e no eixo y
 float velocDeslocEsfera_X = 0.2, velocDeslocEsfera_Y = 0.05;
+float velocDeslocEsfera2_X = 0.2, velocDeslocEsfera2_Y = 0.05;
+
 float velocDeslocCubo_X = 0.2, velocDeslocCubo_Y = 0.05;
 
 // Quantidade de quadros a acumular por redesenho
@@ -25,7 +38,7 @@ bool animado = true;
 // True se gerando motion blur
 bool blur = true;
 
-// Variáveis para controles de navegaï¿½ï¿½o
+// Variáveis para controles de navegação
 GLfloat angle, fAspect;
 GLfloat rotacaoX, rotacaoY, rotacaoXInicial, rotacaoYInicial;
 GLfloat posicaoObservadorX, posicaoObservadorY, posicaoObservadorZ;
@@ -104,29 +117,49 @@ void DesenhaCena(void)
 	glPopMatrix();
 
 	glPushMatrix();
-		glTranslatef(xInicioCubo, yInicioCubo, 0);
-		glutSolidCube(5);
+		glTranslatef(xAtualDaEsfera2, yAtualDaEsfera2,0);
+		glColor3f(0.0f, 1.0f, 0.0f);
+		glutSolidSphere(8.0,20,20);
+	glPopMatrix();
+
+	glPushMatrix();
+		glTranslatef(xAtualCubo, yAtualCubo, 0);
+		glColor3f(1.0, 0.0, 0.0);
+		glutSolidCube(10);
 	glPopMatrix();
 
 	// Atualiza posição atual
 	xAtualDaEsfera += velocDeslocEsfera_X;
 	yAtualDaEsfera += velocDeslocEsfera_Y;
+	xAtualDaEsfera2 += velocDeslocEsfera2_X;
+	yAtualDaEsfera2 += velocDeslocEsfera2_Y;
 	xAtualCubo += velocDeslocCubo_X;
 	yAtualCubo += velocDeslocCubo_Y;
 
-	// Se "bater" nos lados, inverte o sentido do movimento
+	// Se "bater" nos lados, inverte o sentido do movimento da esfera
 	if(xAtualDaEsfera >= 25 || xAtualDaEsfera <= -25)
 		velocDeslocEsfera_X = -velocDeslocEsfera_X;
 
 	if(yAtualDaEsfera >= 25 || yAtualDaEsfera < -25)
 		velocDeslocEsfera_Y = -velocDeslocEsfera_Y;
 
+	if(xAtualDaEsfera2 >= 25 || xAtualDaEsfera2 <= -25)
+		velocDeslocEsfera2_X = -velocDeslocEsfera2_X;
+
+	if(yAtualDaEsfera2 >= 25 || yAtualDaEsfera2 < -25)
+		velocDeslocEsfera2_Y = -velocDeslocEsfera2_Y;
+
+	// Se "bater" nos lados, inverte o sentido do movimento do cubo
 	if(xAtualCubo >= 25 || xAtualCubo <= -25)
 		velocDeslocCubo_X = -velocDeslocCubo_X;
 
 	if(yAtualCubo >= 25 || yAtualCubo < -25)
 		velocDeslocCubo_Y = -velocDeslocCubo_Y;
 
+	if(distancia <= 13.0)
+	{
+		glutIdleFunc(NULL);
+	}
 
 
 	glFlush();
@@ -178,6 +211,8 @@ void Desenha(void)
 		// Atualiza posição inicial como sendo a atual
 		xInicioDaEsfera = xAtualDaEsfera;
 		yInicioDaEsfera = yAtualDaEsfera;
+		xInicioDaEsfera2 = xAtualDaEsfera2;
+		yInicioDaEsfera2 = yAtualDaEsfera2;
 		xInicioCubo = xAtualCubo;
 		yInicioCubo = yAtualCubo;
 	}
