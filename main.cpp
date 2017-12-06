@@ -1,8 +1,7 @@
 #include <stdlib.h>
 #include <GL/glut.h>
-#include <stdio.h>
 
-// Posiï¿½ï¿½o inicial da esfera (sx,sy) e posiï¿½ï¿½o atual (tx,ty)
+// Posição inicial da esfera (sx,sy) e posição atual (tx,ty)
 float xInicioDaEsfera = 0.0, yInicioDaEsfera = -15;
 float xAtualDaEsfera = xInicioDaEsfera;
 float yAtualDaEsfera = yInicioDaEsfera;
@@ -19,21 +18,21 @@ float velocDeslocCubo_X = 0.2, velocDeslocCubo_Y = 0.05;
 // Quantidade de quadros a acumular por redesenho
 int quadros = 5;
 
-// Indica que ï¿½ o primeiro redesenho
+// Indica que é o primeiro redesenho
 bool primeiro = true;
 // True se animando
 bool animado = true;
 // True se gerando motion blur
 bool blur = true;
 
-// Variï¿½veis para controles de navegaï¿½ï¿½o
+// Variáveis para controles de navegaï¿½ï¿½o
 GLfloat angle, fAspect;
 GLfloat rotacaoX, rotacaoY, rotacaoXInicial, rotacaoYInicial;
 GLfloat posicaoObservadorX, posicaoObservadorY, posicaoObservadorZ;
 GLfloat observadorXInicial, observadorYInicial, observadorZInicial;
 int posicaoMouseInicial_X, posicaoMouseInical_Y, botao;
 
-// Funï¿½ï¿½o responsï¿½vel pela especificaï¿½ï¿½o dos parï¿½metros de iluminaï¿½ï¿½o
+// Função responsável pela especificação dos parâmetros de iluminação
 void DefineIluminacao (void)
 {
 	GLfloat luzAmbiente[4]={0.2,0.2,0.2,1.0};
@@ -45,15 +44,15 @@ void DefineIluminacao (void)
 	GLfloat especularidade[4]={1.0,1.0,1.0,1.0};
 	GLint especMaterial = 60;
 
-	// Define a refletï¿½ncia do material
+	// Define a refletância do material
 	glMaterialfv(GL_FRONT,GL_SPECULAR, especularidade);
-	// Define a concentraï¿½ï¿½o do brilho
+	// Define a concentração do brilho
 	glMateriali(GL_FRONT,GL_SHININESS,especMaterial);
 
 	// Ativa o uso da luz ambiente
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, luzAmbiente);
 
-	// Define os parï¿½metros da luz de nï¿½mero 0
+	// Define os parâmetros da luz de número 0
 	glLightfv(GL_LIGHT0, GL_AMBIENT, luzAmbiente);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, luzDifusa );
 	glLightfv(GL_LIGHT0, GL_SPECULAR, luzEspecular );
@@ -95,7 +94,7 @@ void DesenhaLados(void)
 	glEnd();
 }
 
-// Desenha a esfera na posiï¿½ï¿½o atual
+// Desenha a esfera na posição atual
 void DesenhaCena(void)
 {
 	glPushMatrix();
@@ -109,7 +108,7 @@ void DesenhaCena(void)
 		glutSolidCube(5);
 	glPopMatrix();
 
-	// Atualiza posiï¿½ï¿½o atual
+	// Atualiza posição atual
 	xAtualDaEsfera += velocDeslocEsfera_X;
 	yAtualDaEsfera += velocDeslocEsfera_Y;
 	xAtualCubo += velocDeslocCubo_X;
@@ -133,18 +132,14 @@ void DesenhaCena(void)
 	glFlush();
 }
 
-void colisaoEsfera()
-{
-
-}
-// Funï¿½ï¿½o callback de redesenho da janela de visualizaï¿½ï¿½o
+// Função callback de redesenho da janela de visualização
 #define	Q 0.9
 void Desenha(void)
 {
 	// Motion blur ativo ?
 	if(blur)
 	{
-		// Ajusta posiï¿½ï¿½o inicial da esfera
+		// Ajusta posição inicial da esfera
 		xAtualDaEsfera = xInicioDaEsfera;
 		yAtualDaEsfera = yInicioDaEsfera;
 		for( int i=0; i < quadros; ++i)
@@ -161,7 +156,7 @@ void Desenha(void)
 				primeiro = false;
 			}
 			DesenhaCena();
-			// Faz "fade out" na imagem acumulada atï¿½ agora
+			// Faz "fade out" na imagem acumulada até agora
 			glAccum(GL_MULT, Q);
 			// E acumula imagem corrente
 			glAccum(GL_ACCUM, 1-Q);
@@ -180,7 +175,7 @@ void Desenha(void)
 	// Se estiver animando...
 	if(animado)
 	{
-		// Atualiza posiï¿½ï¿½o inicial como sendo a atual
+		// Atualiza posição inicial como sendo a atual
 		xInicioDaEsfera = xAtualDaEsfera;
 		yInicioDaEsfera = yAtualDaEsfera;
 		xInicioCubo = xAtualCubo;
@@ -190,7 +185,7 @@ void Desenha(void)
 	glutSwapBuffers();
 }
 
-// Funï¿½ï¿½o usada para especificar a posiï¿½ï¿½o do observador virtual
+// Função usada para especificar a posição do observador virtual
 void PosicionaObservador(void)
 {
 	// Especifica sistema de coordenadas do modelo
@@ -204,28 +199,28 @@ void PosicionaObservador(void)
 	glRotatef(rotacaoY,0,1,0);
 }
 
-// Funï¿½ï¿½o usada para especificar o volume de visualizaï¿½ï¿½o
+// Função usada para especificar o volume de visualizaçãoo
 void EspecificaParametrosVisualizacao(void)
 {
-	// Especifica sistema de coordenadas de projeï¿½ï¿½o
+	// Especifica sistema de coordenadas de projeção
 	glMatrixMode(GL_PROJECTION);
-	// Inicializa sistema de coordenadas de projeï¿½ï¿½o
+	// Inicializa sistema de coordenadas de projeção
 	glLoadIdentity();
 
-	// Especifica a projeï¿½ï¿½o perspectiva(angulo,aspecto,zMin,zMax)
+	// Especifica a projeção perspectiva(angulo,aspecto,zMin,zMax)
 	gluPerspective(angle, fAspect, 0.5, 500);
 
 	PosicionaObservador();
 }
 
-// Funï¿½ï¿½o callback para realizar a animaï¿½ï¿½o
+// Função callback para realizar a animação
 void Anima(void)
 {
 	glutPostRedisplay();
 }
 
 
-// Funï¿½ï¿½o callback chamada para gerenciar eventos de teclas
+// Função callback chamada para gerenciar eventos de teclas
 void Teclado (unsigned char key, int x, int y)
 {
 	if (key == 27)
@@ -245,7 +240,7 @@ void Teclado (unsigned char key, int x, int y)
 			blur=!blur;
 			primeiro = true;
 			break;
-		// Ativa/desativa animaï¿½ï¿½o
+		// Ativa/desativa animação
 		case 'a':
 			animado = !animado;
 			if(animado)
@@ -258,7 +253,7 @@ void Teclado (unsigned char key, int x, int y)
 	glutPostRedisplay();
 }
 
-// Funï¿½ï¿½o callback para tratar eventos de teclas especiais
+// Função callback para tratar eventos de teclas especiais
 void TeclasEspeciais (int tecla, int x, int y)
 {
 	switch (tecla)
@@ -278,12 +273,12 @@ void TeclasEspeciais (int tecla, int x, int y)
 	glutPostRedisplay();
 }
 
-// Funï¿½ï¿½o callback para eventos de botï¿½es do mouse
+// Função callback para eventos de botões do mouse
 void GerenciaMouse(int button, int state, int x, int y)
 {
 	if(state == GLUT_DOWN)
 	{
-		// Salva os parï¿½metros atuais
+		// Salva os parâmetros atuais
 		posicaoMouseInicial_X  = x;
 		posicaoMouseInical_Y = y;
 		observadorXInicial = posicaoObservadorX;
@@ -297,37 +292,37 @@ void GerenciaMouse(int button, int state, int x, int y)
 		botao = -1;
 }
 
-// Funï¿½ï¿½o callback para eventos de movimento do mouse
+// Função callback para eventos de movimento do mouse
 #define SENS_ROT	5.0
 #define SENS_OBS	10.0
 #define SENS_TRANSL	10.0
 void GerenciaMovim(int x, int y)
 {
-	// Botï¿½o esquerdo ?
+	// Botões esquerdo ?
 	if(botao == GLUT_LEFT_BUTTON)
 	{
-		// Calcula diferenï¿½as
+		// Calcula diferenças
 		int deltax = posicaoMouseInicial_X  - x;
 		int deltay = posicaoMouseInical_Y - y;
-		// E modifica ï¿½ngulos
+		// E modifica ângulos
 		rotacaoY = rotacaoYInicial - deltax/SENS_ROT;
 		rotacaoX = rotacaoXInicial - deltay/SENS_ROT;
 	}
-	// Botï¿½o direito ?
+	// Botão direito ?
 	else if(botao == GLUT_RIGHT_BUTTON)
 	{
-		// Calcula diferenï¿½a
+		// Calcula diferença
 		int deltaz = posicaoMouseInical_Y - y;
-		// E modifica distï¿½ncia do observador
+		// E modifica distância do observador
 		posicaoObservadorZ = observadorZInicial + deltaz/SENS_OBS;
 	}
-	// Botï¿½o do meio ?
+	// Botão do meio ?
 	else if(botao == GLUT_MIDDLE_BUTTON)
 	{
-		// Calcula diferenï¿½as
+		// Calcula diferenças
 		int deltax = posicaoMouseInicial_X  - x;
 		int deltay = posicaoMouseInical_Y - y;
-		// E modifica posiï¿½ï¿½es
+		// E modifica posições
 		posicaoObservadorX = observadorXInicial + deltax/SENS_TRANSL;
 		posicaoObservadorY = observadorYInicial - deltay/SENS_TRANSL;
 	}
@@ -335,51 +330,51 @@ void GerenciaMovim(int x, int y)
 	glutPostRedisplay();
 }
 
-// Funï¿½ï¿½o callback chamada quando o tamanho da janela ï¿½ alterado
+// Função callback chamada quando o tamanho da janela é alterado
 void AlteraTamanhoJanela(GLsizei largura, GLsizei altura)
 {
-	// Para previnir uma divisï¿½o por zero
+	// Para previnir uma divisão por zero
 	if ( altura == 0 )
 		altura = 1;
 
-	// Especifica as dimensï¿½es da viewport
+	// Especifica as dimensções da viewport
 	glViewport(0, 0, largura, altura);
 
-	// Calcula a correï¿½ï¿½o de aspecto
+	// Calcula a correção de aspecto
 	fAspect = (GLfloat)largura/(GLfloat)altura;
 
-	// Se o tamanho da janela mudar, ï¿½ necessï¿½rio recomeï¿½ar o processo
+	// Se o tamanho da janela mudar, é necessário recomeçar o processo
 	primeiro = true;
 
 	EspecificaParametrosVisualizacao();
 }
 
-// Funï¿½ï¿½o responsï¿½vel por inicializar parï¿½metros e variï¿½veis
+// Função responsável por inicializar parâmetros e variáveis
 void Inicializa (void)
 {
-	// Define a cor de fundo da janela de visualizaï¿½ï¿½o como branca
+	// Define a cor de fundo da janela de visualização como branca
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
-	// Habilita a definiï¿½ï¿½o da cor do material a partir da cor corrente
+	// Habilita a definição da cor do material a partir da cor corrente
 	glEnable(GL_COLOR_MATERIAL);
-	//Habilita o uso de iluminaï¿½ï¿½o
+	//Habilita o uso de iluminação
 	glEnable(GL_LIGHTING);
-	// Habilita a luz de nï¿½mero 0
+	// Habilita a luz de número 0
 	glEnable(GL_LIGHT0);
 	// Habilita o depth-buffering
 	glEnable(GL_DEPTH_TEST);
 
-	// Habilita o modelo de colorizaï¿½ï¿½o de Gouraud
+	// Habilita o modelo de colorização de Gouraud
 	glShadeModel(GL_SMOOTH);
 
 	// Limpa accum buffer
 	glClear(GL_ACCUM_BUFFER_BIT);
 
-	// Inicializa a variï¿½vel que especifica o ï¿½ngulo da projeï¿½ï¿½o
+	// Inicializa a variável que especifica o ângulo da projeção
 	// perspectiva
 	angle = 80;
 
-	// Inicializa as variï¿½veis usadas para alterar a posiï¿½ï¿½o do
+	// Inicializa as variáveis usadas para alterar a posição do
 	// observador virtual
 	rotacaoX = 0;
 	rotacaoY = 0;
@@ -391,43 +386,43 @@ void Inicializa (void)
 int main(int argc, char** argv)
 {
 	glutInit(&argc, argv);
-	// Define o modo de operaï¿½ï¿½o da GLUT
+	// Define o modo de operação da GLUT
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH | GLUT_ACCUM);
 
-	// Especifica a posiï¿½ï¿½o inicial da janela GLUT
+	// Especifica a posição inicial da janela GLUT
 	glutInitWindowPosition(5,5);
 
 	// Especifica o tamanho inicial em pixels da janela GLUT
 	glutInitWindowSize(450,450);
 
-	// Cria a janela passando como argumento o tï¿½tulo da mesma
+	// Cria a janela passando como argumento o título da mesma
 	glutCreateWindow("Exemplo de motion blur");
 
-	// Registra a funï¿½ï¿½o callback de redesenho da janela de visualizaï¿½ï¿½o
+	// Registra a função callback de redesenho da janela de visualização
 	glutDisplayFunc(Desenha);
 
-	// Registra a funï¿½ï¿½o callback de redimensionamento da janela de visualizaï¿½ï¿½o
+	// Registra a função callback de redimensionamento da janela de visualização
 	glutReshapeFunc(AlteraTamanhoJanela);
 
-	// Registra a funï¿½ï¿½o callback para tratamento das teclas normais
+	// Registra a função callback para tratamento das teclas normais
 	glutKeyboardFunc(Teclado);
 
-	// Registra a funï¿½ï¿½o callback para tratamento das teclas especiais
+	// Registra a função callback para tratamento das teclas especiais
 	glutSpecialFunc(TeclasEspeciais);
 
-	// Registra a funï¿½ï¿½o callback para eventos de botï¿½es do mouse
+	// Registra a função callback para eventos de botões do mouse
 	glutMouseFunc(GerenciaMouse);
 
-	// Registra a funï¿½ï¿½o callback para eventos de movimento do mouse
+	// Registra a função callback para eventos de movimento do mouse
 	glutMotionFunc(GerenciaMovim);
 
-	// Registra a funï¿½ï¿½o callback para quando o sistema estiver ocioso
+	// Registra a função callback para quando o sistema estiver ocioso
 	glutIdleFunc(Anima);
 
-	// Chama a funï¿½ï¿½o responsï¿½vel por fazer as inicializaï¿½ï¿½es
+	// Chama a função responsável por fazer as inicializações
 	Inicializa();
 
-	// Inicia o processamento e aguarda interaï¿½ï¿½es do usuï¿½rio
+	// Inicia o processamento e aguarda interações do usuário
 	glutMainLoop();
 
 	return 0;
