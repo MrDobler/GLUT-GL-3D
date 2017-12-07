@@ -6,10 +6,13 @@
 float xInicioDaEsfera = 0.0, yInicioDaEsfera = -15;
 float xAtualDaEsfera = xInicioDaEsfera;
 float yAtualDaEsfera = yInicioDaEsfera;
+float xE = xAtualDaEsfera+5;
+float yE = yAtualDaEsfera+5;
 
-float xInicioDaEsfera2 = 10, yInicioDaEsfera2 = 10;
+float xInicioDaEsfera2 = -15, yInicioDaEsfera2 = 0;
 float xAtualDaEsfera2 = xInicioDaEsfera2;
 float yAtualDaEsfera2 = yInicioDaEsfera2;
+
 //Posição inicial do cubo1
 float xInicioCubo = 20.0;
 float yInicioCubo = 20.0;
@@ -156,10 +159,14 @@ void DesenhaCena(void)
 	if(yAtualCubo >= 25 || yAtualCubo < -25)
 		velocDeslocCubo_Y = -velocDeslocCubo_Y;
 
-	if(distancia <= 13.0)
-	{
-		glutIdleFunc(NULL);
-	}
+	if(xE < xAtualDaEsfera2 )
+		if(yE < yAtualDaEsfera2 ){
+		velocDeslocEsfera_X = -velocDeslocEsfera_X;
+		velocDeslocEsfera_Y = -velocDeslocEsfera_Y;
+		velocDeslocEsfera2_X = -velocDeslocEsfera2_X;
+		velocDeslocEsfera2_Y = -velocDeslocEsfera2_Y;
+
+		}
 
 
 	glFlush();
